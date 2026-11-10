@@ -1,0 +1,1891 @@
+/*
+ * Una Corda Piano Studio — the page (Manuscript). Values come from tokens.css.
+ *
+ * A music room in afternoon light, and the manuscript on the stand: warm
+ * score-paper pages, ebony type, a parchment band for the first lesson and the
+ * room, the piano's ebony for how I teach and the footer, and one deep brand
+ * colour (mahogany by default, owner-editable) that carries white text: the
+ * main buttons, the italic highlight in headings, the booking band. The one
+ * ornament is the staff — five fine lines, nothing ever written on them — at
+ * the start of each section label, along the foot of the first photograph,
+ * over each step of the first lesson and under the footer's name. Steps are
+ * numbered 1 to 5 like the finger numbers over a beginner's notes. Calm,
+ * left-aligned, generous; lessons read like a printed programme: name and
+ * purpose left, length and price as two labelled figures.
+ */
+
+/* ── Shared pieces ────────────────────────────────────────── */
+
+/* A section's label (SectionMark.tsx): the number, a short length of the staff, the name. */
+.section-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.section-mark__n {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-lg);
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1;
+  color: var(--accent-text);
+}
+
+.section-mark__staff {
+  inline-size: var(--space-8);
+}
+
+.section-mark--on-dark {
+  color: var(--on-forest-soft);
+}
+
+.section-mark--on-dark .section-mark__n {
+  color: var(--accent-glow);
+}
+
+.sample-note {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.tag--on-photo {
+  position: absolute;
+  top: var(--space-3);
+  left: var(--space-3);
+  z-index: 1;
+  background: color-mix(in oklab, var(--raised) 92%, transparent);
+  color: var(--ink);
+  pointer-events: none;
+}
+
+.open-status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.open-status__dot {
+  inline-size: var(--status-dot);
+  block-size: var(--status-dot);
+  border-radius: var(--radius-pill);
+  background: var(--muted);
+  flex: none;
+}
+
+.open-status[data-open='true'] .open-status__dot {
+  background: var(--mark);
+  box-shadow: 0 0 0 3px var(--mark-halo);
+}
+
+.skeleton--service {
+  block-size: 6rem;
+  margin-bottom: var(--space-3);
+}
+
+.skeleton--row {
+  block-size: 1.5rem;
+  margin-bottom: var(--space-2);
+}
+
+/* Bands: parchment for the first lesson and the room, ebony for how I teach. */
+.band {
+  background: var(--oat);
+}
+
+.dark {
+  background: var(--forest);
+  color: var(--on-forest-soft);
+}
+
+.dark h2,
+.dark h3,
+.dark dt {
+  color: var(--on-forest);
+}
+
+.dark :focus-visible {
+  outline-color: var(--accent-glow);
+}
+
+/* A photograph's caption: small italic serif, like a note pencilled under it. */
+.caption {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+/* ── Banners ──────────────────────────────────────────────── */
+
+.banner {
+  position: relative;
+  z-index: var(--layer-banner);
+  padding: var(--space-2) var(--gutter);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.banner p {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.banner--preview {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.banner--draft {
+  background: var(--accent-tint);
+  color: var(--ink);
+}
+
+.banner__dot {
+  inline-size: var(--status-dot);
+  block-size: var(--status-dot);
+  border-radius: var(--radius-pill);
+  background: var(--ply);
+}
+
+/* ── Header ───────────────────────────────────────────────── */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: var(--layer-header);
+  background: color-mix(in oklab, var(--paper) 94%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: var(--hairline) solid var(--rule);
+  transition: border-color var(--dur-quick) var(--ease-soft);
+}
+
+.site-header[data-at-top] {
+  border-bottom-color: transparent;
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-5);
+  min-height: var(--header-height);
+}
+
+.site-header__home {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.wordmark {
+  display: inline-flex;
+  align-items: center;
+}
+
+.wordmark__words {
+  display: inline-flex;
+  align-items: baseline;
+  gap: var(--space-3);
+}
+
+/* The name in the serif's italic — like a title written on the cover of a music book. */
+.wordmark__text {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: var(--weight-display);
+  font-size: var(--text-wordmark);
+  letter-spacing: var(--tracking-wordmark);
+  line-height: 1;
+  color: var(--ink);
+}
+
+.wordmark__descriptor {
+  font-family: var(--font-mono);
+  padding-left: var(--space-3);
+  border-left: var(--hairline) solid var(--line-soft);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.wordmark__logo {
+  block-size: var(--logo-height);
+  inline-size: auto;
+  max-inline-size: var(--logo-max);
+  object-fit: contain;
+}
+
+.site-nav {
+  display: none;
+}
+
+.site-nav a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  padding-inline: var(--space-1);
+  color: var(--ink-soft);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-decoration: none;
+  white-space: nowrap;
+  background-image: linear-gradient(var(--accent), var(--accent));
+  background-repeat: no-repeat;
+  background-position: 0 80%;
+  background-size: 0 var(--rule-strong);
+  transition: background-size var(--dur-step) var(--ease-settle), color var(--dur-quick) var(--ease-soft);
+}
+
+.site-nav a:hover {
+  color: var(--ink);
+  background-size: 100% var(--rule-strong);
+}
+
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.site-header__wide {
+  display: none;
+}
+
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: var(--tap);
+  min-height: var(--tap);
+  padding-inline: var(--space-3);
+  border: var(--hairline) solid var(--line-input);
+  border-radius: var(--radius-button);
+  background: transparent;
+  color: var(--ink);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  cursor: pointer;
+}
+
+.site-menu {
+  border-top: var(--hairline) solid var(--rule);
+  background: var(--paper);
+  padding-block: var(--space-3) var(--space-5);
+}
+
+.site-menu ul {
+  list-style: none;
+  display: grid;
+}
+
+.site-menu a {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-4);
+  min-height: var(--control);
+  padding-block: var(--space-3);
+  border-bottom: var(--hairline) solid var(--rule);
+  color: var(--ink);
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-xl);
+  text-decoration: none;
+}
+
+.site-menu__n {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Phones: the name alone, so Book and Menu always fit beside it. */
+@media (max-width: 599px) {
+  .wordmark__descriptor {
+    display: none;
+  }
+}
+
+@media (min-width: 600px) {
+  .site-header__wide {
+    display: inline;
+  }
+}
+
+@media (min-width: 1180px) {
+  .site-nav {
+    display: flex;
+    align-items: center;
+    gap: clamp(var(--space-3), 1.4vw, var(--space-5));
+  }
+
+  .menu-toggle,
+  .site-menu {
+    display: none;
+  }
+}
+
+
+/* ── The first screen ─────────────────────────────────────── */
+
+.hero {
+  padding-block: var(--space-6) var(--space-4);
+}
+
+.hero__inner {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'text'
+    'visual'
+    'for';
+  gap: var(--space-6);
+}
+
+.hero__text {
+  grid-area: text;
+  display: grid;
+  justify-items: start;
+  align-content: start;
+  gap: var(--space-4);
+}
+
+.hero__title {
+  max-width: var(--measure-title);
+  font-size: var(--text-hero);
+  line-height: var(--leading-display);
+}
+
+.hero__lede {
+  max-width: var(--measure-lede);
+  font-size: var(--text-lg);
+  color: var(--ink-soft);
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3) var(--space-5);
+  margin-top: var(--space-2);
+}
+
+/* The first lesson's real length and price, from the engine. */
+.hero__first {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-1) var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.hero__first-name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-md);
+  color: var(--ink);
+}
+
+.hero__first-sep {
+  color: var(--muted);
+}
+
+.hero__status {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.hero__visual {
+  grid-area: visual;
+  position: relative;
+  display: grid;
+  align-self: start;
+  align-content: start;
+  gap: var(--space-3);
+}
+
+.hero__photo {
+  aspect-ratio: 4 / 5;
+  max-block-size: 78svh;
+}
+
+.hero__staff {
+  inline-size: 100%;
+}
+
+.hero__for {
+  grid-area: for;
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.hero__for-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.hero__for ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  border-top: var(--hairline) solid var(--rule);
+}
+
+.hero__for li {
+  padding-block: var(--space-2);
+  border-bottom: var(--hairline) solid var(--rule);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.hero__note {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.hero--text-only .hero__inner {
+  grid-template-areas:
+    'text'
+    'for';
+}
+
+/* The first screen settles in once; reduced motion skips it (tokens). */
+.hero__enter {
+  animation: rise var(--dur-enter) var(--ease-settle) both;
+}
+
+.hero__text > .hero__enter:nth-child(2) {
+  animation-delay: calc(var(--stagger) * 1);
+}
+
+.hero__text > .hero__enter:nth-child(3) {
+  animation-delay: calc(var(--stagger) * 2);
+}
+
+.hero__text > .hero__enter:nth-child(n + 4) {
+  animation-delay: calc(var(--stagger) * 3);
+}
+
+.hero__photo img {
+  animation: settle var(--dur-photo) var(--ease-settle) both;
+}
+
+/* Phones: a slightly smaller headline and lede, so both actions sit inside the first screen. */
+@media (max-width: 599px) {
+  .hero__text {
+    gap: var(--space-3);
+  }
+
+  .hero__title {
+    font-size: clamp(2.25rem, 1.3rem + 4.6vw, 2.75rem);
+  }
+
+  .hero__lede {
+    font-size: var(--text-md);
+  }
+}
+
+@media (min-width: 600px) {
+  .hero__for ul {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-5);
+  }
+}
+
+@media (min-width: 960px) {
+  .hero {
+    padding-block: var(--space-6) var(--space-6);
+  }
+
+  .hero__inner {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    grid-template-areas:
+      'text visual'
+      'for visual';
+    grid-template-rows: auto 1fr;
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+    row-gap: var(--space-7);
+  }
+
+  .hero__text {
+    padding-top: clamp(var(--space-4), 5svh, var(--space-8));
+  }
+
+  .hero__visual {
+    justify-self: end;
+    inline-size: min(100%, calc(var(--hero-photo-max) * 0.8));
+  }
+
+  .hero__photo {
+    max-block-size: none;
+  }
+
+  .hero__for {
+    align-self: end;
+  }
+
+  .hero--text-only .hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'text'
+      'for';
+  }
+}
+
+/* Short laptop screens: a tighter first screen, so the actions and the photo both fit. */
+@media (min-width: 960px) and (max-height: 820px) {
+  .hero__text {
+    padding-top: var(--space-2);
+    gap: var(--space-3);
+  }
+
+  .hero__title {
+    font-size: clamp(2.5rem, 1.2rem + 3vw, 3.875rem);
+  }
+
+  .hero__lede {
+    font-size: var(--text-md);
+  }
+}
+
+/* ── 1 Lessons & prices ───────────────────────────────────── */
+
+.terms {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-5);
+  margin-bottom: var(--space-8);
+}
+
+.term {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid var(--ink);
+}
+
+.term__title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-fact);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+}
+
+.term__text {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.menu {
+  display: grid;
+  gap: var(--space-8);
+}
+
+.kind {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.kind__head {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.kind__title {
+  font-size: var(--text-xl);
+}
+
+.kind__note {
+  max-width: 34ch;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+  border-top: var(--hairline) solid var(--ink);
+}
+
+/* The first lesson: the place to start, set on a fresh sheet with a brand-colour edge. */
+.kind--first .menu-list {
+  border-top: 0;
+}
+
+.kind--first .item {
+  padding-inline: var(--space-5);
+  border: var(--hairline) solid var(--rule);
+  border-left: var(--edge) solid var(--accent);
+  border-radius: var(--radius-1);
+  background: var(--raised);
+}
+
+.kind--first .item + .item {
+  margin-top: var(--space-3);
+}
+
+.item {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    'main'
+    'figures'
+    'book';
+  gap: var(--space-4);
+  padding-block: var(--space-5);
+  border-bottom: var(--hairline) solid var(--rule);
+}
+
+.item__main {
+  grid-area: main;
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.item__thumb {
+  inline-size: var(--service-thumb);
+  block-size: var(--service-thumb);
+  object-fit: cover;
+  border-radius: var(--radius-1);
+}
+
+.item__name {
+  font-size: var(--text-service);
+  line-height: var(--leading-tight);
+}
+
+.item__lead {
+  max-width: 62ch;
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.item__for {
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+.item__for-label {
+  margin-right: var(--space-1);
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+.item__figures {
+  grid-area: figures;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.item__figure {
+  display: grid;
+  align-content: start;
+  gap: var(--space-1);
+}
+
+.item__figure dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.item__figure dd {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.item__amount {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: var(--text-price);
+  line-height: 1.1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.item__figure--free .item__amount {
+  color: var(--accent-text);
+}
+
+.item__fine {
+  font-size: var(--text-xs);
+  line-height: var(--leading-tight);
+  color: var(--muted);
+}
+
+.item__book {
+  grid-area: book;
+  justify-self: start;
+}
+
+/* "Looking for regular weekly lessons?" — a quiet sheet with the staff along its top. */
+.weekly {
+  position: relative;
+  display: grid;
+  gap: var(--space-4);
+  justify-items: start;
+  margin-block: var(--space-8) var(--space-6);
+  padding: var(--space-7) var(--space-5) var(--space-5);
+  border-radius: var(--radius-2);
+  background: var(--oat);
+}
+
+.weekly__staff {
+  position: absolute;
+  inset-inline: var(--space-5);
+  top: var(--space-5);
+}
+
+.weekly__title {
+  font-size: var(--text-xl);
+}
+
+.weekly__body {
+  max-width: 58ch;
+  color: var(--ink-soft);
+}
+
+.price-note {
+  max-width: 68ch;
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+@media (min-width: 720px) {
+  .terms {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .weekly {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--space-6);
+    padding: var(--space-8) var(--space-6) var(--space-6);
+  }
+
+  .weekly__staff {
+    inset-inline: var(--space-6);
+    top: var(--space-6);
+  }
+
+  .item {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      'main main'
+      'figures book';
+    align-items: end;
+  }
+
+  .item__figures {
+    grid-template-columns: repeat(2, var(--figure-w));
+    column-gap: var(--space-6);
+  }
+}
+
+@media (min-width: 1024px) {
+  .kind {
+    grid-template-columns: var(--kind-aside) minmax(0, 1fr);
+    column-gap: var(--space-7);
+  }
+
+  .kind__head {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-5));
+    align-self: start;
+    padding-top: var(--space-4);
+  }
+
+  .item {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas: 'main figures book';
+    column-gap: var(--space-6);
+    align-items: start;
+  }
+
+  .weekly,
+  .price-note {
+    margin-left: calc(var(--kind-aside) + var(--space-7));
+  }
+}
+
+/* ── 2 Your first lesson (parchment) ──────────────────────── */
+
+.first__grid {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.first__body {
+  display: grid;
+  gap: var(--space-6);
+  align-content: start;
+  justify-items: start;
+}
+
+.first__head {
+  margin-bottom: 0;
+}
+
+.first__figures {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4) var(--space-7);
+  padding-block: var(--space-4);
+  border-block: var(--hairline) solid var(--line-soft);
+  inline-size: 100%;
+}
+
+.first__figures div {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.first__figures dt {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.first__figures dd {
+  font-family: var(--font-display);
+  font-weight: var(--weight-display);
+  font-size: var(--text-numeral);
+  line-height: 1;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums lining-nums;
+}
+
+.first__figures dd.first__figure-words {
+  font-style: italic;
+  font-size: var(--text-xl);
+  line-height: 1.3;
+  align-self: end;
+}
+
+.first__facts {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+
+.first__facts li {
+  display: grid;
+  grid-template-columns: var(--space-5) minmax(0, 1fr);
+  align-items: baseline;
+  color: var(--ink);
+}
+
+.first__facts li::before {
+  content: '';
+  inline-size: var(--space-3);
+  block-size: var(--rule-strong);
+  background: var(--accent);
+  transform: translateY(-0.3em);
+}
+
+.first__visual {
+  position: relative;
+}
+
+.first__photo {
+  aspect-ratio: 3 / 2;
+}
+
+.first__steps-wrap {
+  display: grid;
+  gap: var(--space-5);
+  margin-top: var(--space-9);
+}
+
+.first__label {
+  font-family: var(--font-mono);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* The five steps, numbered like the finger numbers written over a beginner's notes. */
+.fingers {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-6);
+}
+
+.finger {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+}
+
+.finger__n {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: var(--weight-display);
+  font-size: var(--text-finger);
+  line-height: 1;
+  color: var(--accent-text);
+  font-variant-numeric: lining-nums;
+}
+
+.finger__staff {
+  inline-size: 100%;
+  margin-block: var(--space-1) var(--space-2);
+}
+
+.finger__title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-card);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+}
+
+.finger__text {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+.first__notes {
+  display: grid;
+  gap: var(--space-6);
+  margin-top: var(--space-8);
+  padding-top: var(--space-6);
+  border-top: var(--hairline) solid var(--line-soft);
+}
+
+.first__note {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 56ch;
+  color: var(--ink-soft);
+}
+
+/* Phones: each step as a row — its finger number beside it — so the five stay compact. */
+@media (max-width: 639px) {
+  .fingers {
+    gap: 0;
+    border-top: var(--hairline) solid var(--line-soft);
+  }
+
+  .finger {
+    grid-template-columns: var(--space-7) minmax(0, 1fr);
+    column-gap: var(--space-3);
+    row-gap: var(--space-1);
+    padding-block: var(--space-4);
+    border-bottom: var(--hairline) solid var(--line-soft);
+  }
+
+  .finger__n {
+    grid-row: span 2;
+    font-size: var(--text-2xl);
+  }
+
+  .finger__staff {
+    display: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .fingers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-6);
+  }
+
+  .first__notes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-7);
+  }
+}
+
+@media (min-width: 960px) {
+  .first__grid {
+    grid-template-columns: minmax(0, 6fr) minmax(0, 6fr);
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+    align-items: center;
+  }
+
+  .first__grid--text {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .fingers {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    column-gap: var(--space-5);
+  }
+}
+
+/* ── 3 How I teach (ebony) ────────────────────────────────── */
+
+.approach__grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.approach__head {
+  margin-bottom: 0;
+}
+
+.approach__statement {
+  position: relative;
+  max-width: 30ch;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: var(--weight-display);
+  font-size: var(--text-statement);
+  line-height: 1.22;
+  color: var(--on-forest);
+  text-wrap: balance;
+}
+
+.approach__quote {
+  display: block;
+  font-size: 2em;
+  line-height: 0.6;
+  color: var(--accent-glow);
+}
+
+.approach__photos {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+.approach__main {
+  position: relative;
+  grid-column: 1 / -1;
+  grid-row: 1;
+}
+
+.approach__side {
+  position: relative;
+  grid-column: 6 / -1;
+  grid-row: 2;
+  margin-top: -18%;
+  border: var(--space-2) solid var(--forest);
+  border-right: 0;
+  border-bottom: 0;
+}
+
+.approach__photos--single .approach__side {
+  grid-column: 1 / -1;
+  margin-top: 0;
+  border: 0;
+}
+
+.approach__main .approach__photo {
+  aspect-ratio: 3 / 2;
+}
+
+.approach__side .approach__photo {
+  aspect-ratio: 4 / 5;
+}
+
+.approach__body {
+  display: grid;
+  gap: var(--space-6);
+  align-content: start;
+}
+
+.approach__text {
+  max-width: 58ch;
+  font-size: var(--text-lg);
+  color: var(--on-forest-soft);
+}
+
+.principles {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-5);
+}
+
+.principle {
+  display: grid;
+  align-content: start;
+  grid-template-columns: var(--space-6) minmax(0, 1fr);
+  column-gap: var(--space-3);
+  row-gap: var(--space-1);
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid var(--forest-line-strong);
+}
+
+.principle__n {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-xl);
+  line-height: 1;
+  color: var(--accent-glow);
+}
+
+.principle__title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-card);
+  line-height: var(--leading-tight);
+  color: var(--on-forest);
+}
+
+.principle__text {
+  font-size: var(--text-sm);
+  color: var(--on-forest-soft);
+}
+
+@media (min-width: 720px) {
+  .principles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-6);
+  }
+}
+
+@media (min-width: 960px) {
+  .approach__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    grid-template-areas:
+      'head statement'
+      'photos body';
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+    row-gap: var(--space-8);
+  }
+
+  .approach__head {
+    grid-area: head;
+  }
+
+  .approach__statement {
+    grid-area: statement;
+    align-self: end;
+  }
+
+  .approach__photos {
+    grid-area: photos;
+    align-self: start;
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-5));
+  }
+
+  .approach__body {
+    grid-area: body;
+  }
+}
+
+/* ── 4 Who it's for ───────────────────────────────────────── */
+
+.audience__grid {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.audience__side {
+  display: grid;
+  gap: var(--space-6);
+  align-content: start;
+}
+
+.audience__head {
+  margin-bottom: 0;
+}
+
+.guardian {
+  display: grid;
+  gap: var(--space-2);
+  max-width: 52ch;
+  padding: var(--space-5);
+  border-left: var(--edge) solid var(--accent);
+  border-radius: 0 var(--radius-2) var(--radius-2) 0;
+  background: var(--oat);
+  color: var(--ink-soft);
+}
+
+.guardian__title {
+  font-size: var(--text-card);
+}
+
+.audience__list {
+  list-style: none;
+  padding: 0;
+  border-top: var(--hairline) solid var(--ink);
+}
+
+.who {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-5);
+  border-bottom: var(--hairline) solid var(--rule);
+}
+
+.who__title {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-xl);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+}
+
+.who__text {
+  max-width: 56ch;
+  color: var(--ink-soft);
+}
+
+.audience__not {
+  margin-top: var(--space-5);
+  font-size: var(--text-sm);
+  color: var(--muted);
+}
+
+@media (min-width: 960px) {
+  .audience__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+  }
+
+  .audience__side {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+    align-self: start;
+  }
+
+  .who {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    column-gap: var(--space-6);
+    align-items: baseline;
+  }
+}
+
+/* ── 5 The music room (parchment) ─────────────────────────── */
+
+.room__grid {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.room__side {
+  display: grid;
+  gap: var(--space-5);
+  align-content: start;
+}
+
+.room__head {
+  margin-bottom: 0;
+}
+
+.room__text {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 56ch;
+  color: var(--ink-soft);
+}
+
+.room__lead {
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.room__facts {
+  display: grid;
+  border-top: var(--hairline) solid var(--line-soft);
+}
+
+.room__facts div {
+  display: grid;
+  gap: var(--space-1);
+  padding-block: var(--space-3);
+  border-bottom: var(--hairline) solid var(--line-soft);
+}
+
+.room__facts dt {
+  font-weight: var(--weight-strong);
+  color: var(--ink);
+}
+
+.room__facts dd {
+  font-size: var(--text-sm);
+  color: var(--ink-soft);
+}
+
+/*
+ * Four frames in two level rows: a wide (3:2) frame beside an upright (4:5)
+ * one, then mirrored. 30 : 16 columns makes both frames in a row the same
+ * height (a 3:2 frame is 1.875 × as wide as a 4:5 frame of equal height).
+ * Phones: the wides full width, the two uprights side by side between them.
+ */
+.room__photos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5) var(--space-3);
+}
+
+.room__frame {
+  position: relative;
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+
+.room__frame--wide {
+  grid-column: 1 / -1;
+}
+
+.room__frame--wide .room__photo {
+  aspect-ratio: 3 / 2;
+}
+
+.room__frame--upright .room__photo {
+  aspect-ratio: 4 / 5;
+}
+
+.room__caption {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-sm);
+  line-height: var(--leading-tight);
+  color: var(--muted);
+}
+
+@media (min-width: 720px) {
+  .room__photos--4 {
+    grid-template-columns: repeat(46, minmax(0, 1fr));
+    column-gap: var(--space-4);
+  }
+
+  .room__photos--4 .room__frame:nth-child(1) {
+    grid-column: 1 / 31;
+  }
+
+  .room__photos--4 .room__frame:nth-child(2) {
+    grid-column: 31 / 47;
+  }
+
+  .room__photos--4 .room__frame:nth-child(3) {
+    grid-column: 1 / 17;
+  }
+
+  .room__photos--4 .room__frame:nth-child(4) {
+    grid-column: 17 / 47;
+  }
+}
+
+@media (min-width: 1024px) {
+  .room__grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    column-gap: clamp(var(--space-6), 5vw, var(--space-9));
+  }
+
+  .room__side {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+    align-self: start;
+  }
+}
+
+/* ── 6 Good to know ───────────────────────────────────────── */
+
+.faq__grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.faq__head {
+  margin-bottom: 0;
+}
+
+.faq__list {
+  border-top: var(--hairline) solid var(--ink);
+}
+
+.qa {
+  border-bottom: var(--hairline) solid var(--line-soft);
+}
+
+.qa summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-height: var(--control);
+  padding-block: var(--space-4);
+  cursor: pointer;
+  list-style: none;
+}
+
+.qa summary::-webkit-details-marker {
+  display: none;
+}
+
+.qa__q {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-card);
+  letter-spacing: var(--heading-tracking);
+  line-height: var(--leading-tight);
+  color: var(--ink);
+}
+
+.qa__icon {
+  position: relative;
+  flex: none;
+  inline-size: var(--space-5);
+  block-size: var(--space-5);
+}
+
+.qa__icon::before,
+.qa__icon::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  top: 50%;
+  block-size: var(--rule-strong);
+  margin-top: calc(-1 * var(--hairline));
+  background: var(--accent);
+  transition: transform var(--dur-step) var(--ease-settle);
+}
+
+.qa__icon::after {
+  transform: rotate(90deg);
+}
+
+.qa[open] .qa__icon::after {
+  transform: rotate(0deg);
+}
+
+.qa__a {
+  padding-bottom: var(--space-5);
+  max-width: 64ch;
+  color: var(--ink-soft);
+}
+
+@media (min-width: 960px) {
+  .faq__grid {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 7fr);
+    gap: var(--space-8);
+  }
+
+  .faq__head {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-6));
+    align-self: start;
+  }
+}
+
+
+/* ── Booking band (the brand colour) ──────────────────────── */
+
+/* The one place the brand colour fills a whole band: the call to book. Text on it is white. */
+.book {
+  position: relative;
+  background: var(--accent);
+  color: var(--on-accent);
+}
+
+.book h2,
+.book h3,
+.book p,
+.book .section-intro,
+.book .book__step,
+.book .book__text,
+.book .eyebrow,
+.book .hl {
+  color: var(--on-accent);
+}
+
+.book .eyebrow::before {
+  background: var(--on-accent);
+}
+
+.book :focus-visible {
+  outline-color: var(--on-accent);
+}
+
+/* The staff along the band's top edge, in a pale line of the band's own colour. */
+.book::before {
+  content: '';
+  position: absolute;
+  inset-inline: var(--gutter);
+  top: var(--space-6);
+  block-size: var(--staff-height);
+  background: repeating-linear-gradient(180deg, color-mix(in oklab, var(--on-accent) 32%, var(--accent)) 0 var(--staff-weight), transparent var(--staff-weight) var(--staff-gap));
+}
+
+.book .button {
+  background: var(--raised);
+  border-color: var(--raised);
+  color: var(--accent-text);
+}
+
+.book .button:hover {
+  background: var(--paper);
+  border-color: var(--paper);
+}
+
+.book .notice,
+.book .contact-instead {
+  padding: var(--space-5);
+  border-radius: var(--radius-2);
+  background: var(--raised);
+  color: var(--ink);
+}
+
+.book .contact-instead a {
+  color: var(--accent-text);
+}
+
+.book .notice p,
+.book .contact-instead p,
+.book .contact-instead h3 {
+  color: var(--ink);
+}
+
+.book__grid {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.book__head {
+  margin-bottom: 0;
+}
+
+.book__head h2 {
+  font-size: var(--text-3xl);
+}
+
+.book__how {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-6);
+}
+
+.book__steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-4);
+  inline-size: 100%;
+}
+
+.book__steps li {
+  display: grid;
+  grid-template-columns: var(--space-6) minmax(0, 1fr);
+  column-gap: var(--space-4);
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid color-mix(in oklab, var(--on-accent) 36%, var(--accent));
+}
+
+.book__n {
+  grid-row: span 2;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: var(--text-xl);
+  line-height: 1;
+  color: var(--on-accent);
+}
+
+.book__step {
+  font-weight: var(--weight-strong);
+}
+
+.book__text {
+  font-size: var(--text-sm);
+}
+
+.book__loading {
+  max-width: var(--form-max);
+}
+
+@media (min-width: 960px) {
+  .book__grid {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+}
+
+/* ── 7 Visit ──────────────────────────────────────────────── */
+
+.visit__grid {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.visit__col {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+}
+
+.visit__col h3 {
+  padding-bottom: var(--space-3);
+  border-bottom: var(--hairline) solid var(--ink);
+  font-size: var(--text-xl);
+}
+
+.hours {
+  display: grid;
+}
+
+.hours__row {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-2);
+  border-bottom: var(--hairline) solid var(--rule);
+}
+
+.hours__row dt {
+  color: var(--ink);
+}
+
+.hours__row dd {
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.hours__row--today dt,
+.hours__row--today dd {
+  font-weight: var(--weight-strong);
+  color: var(--ink);
+}
+
+.hours__row--today dt::after {
+  content: 'Today';
+  margin-left: var(--space-2);
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-1);
+  background: var(--accent);
+  color: var(--on-accent);
+  font-size: var(--text-micro);
+  font-weight: var(--weight-strong);
+  letter-spacing: var(--tracking-tag);
+  text-transform: uppercase;
+  vertical-align: 0.1em;
+}
+
+.hours-changes {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.hours-changes h4 {
+  font-family: var(--font-text);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-strong);
+  letter-spacing: 0;
+}
+
+.hours-changes ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-1);
+  font-size: var(--text-sm);
+}
+
+.contact {
+  display: grid;
+  gap: var(--space-2);
+  font-style: normal;
+}
+
+.contact__name {
+  font-family: var(--heading-font);
+  font-weight: var(--heading-weight);
+  font-size: var(--text-lg);
+  color: var(--ink);
+}
+
+.contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--ink);
+  font-weight: var(--weight-medium);
+}
+
+.contact__directions {
+  justify-self: start;
+}
+
+@media (min-width: 720px) {
+  .visit__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-7);
+  }
+}
+
+@media (min-width: 1024px) {
+  .visit__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ── Footer (ebony) ───────────────────────────────────────── */
+
+.site-footer {
+  background: var(--forest);
+  color: var(--on-forest-soft);
+  padding-block: var(--space-9) var(--space-6);
+}
+
+.site-footer a {
+  color: var(--on-forest);
+}
+
+/* The footer's Book button: paper on ebony. */
+.site-footer a.button {
+  color: var(--forest);
+}
+
+.site-footer :focus-visible {
+  outline-color: var(--accent-glow);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: var(--space-7);
+}
+
+.site-footer__brand {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-4);
+}
+
+.site-footer__name {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: var(--weight-display);
+  font-size: var(--text-footer-name);
+  line-height: 0.95;
+  color: var(--on-forest);
+}
+
+/* The staff under the name, on ebony. */
+.site-footer__name::after {
+  content: '';
+  display: block;
+  inline-size: min(100%, 14rem);
+  block-size: var(--staff-height);
+  margin-top: var(--space-4);
+  background: var(--staff-on-dark);
+}
+
+.site-footer__tagline {
+  max-width: 40ch;
+}
+
+.site-footer__brand .button {
+  margin-top: var(--space-3);
+}
+
+.site-footer__col {
+  display: grid;
+  gap: var(--space-3);
+  align-content: start;
+}
+
+.site-footer__label {
+  font-size: var(--text-micro);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--on-forest-faint);
+}
+
+.site-footer__col ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+}
+
+.site-footer__col ul a,
+.site-footer__contact a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  text-decoration: none;
+}
+
+.site-footer__col ul a:hover,
+.site-footer__contact a:hover {
+  text-decoration: underline;
+}
+
+.site-footer__contact {
+  display: grid;
+  font-style: normal;
+}
+
+.site-footer__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+  padding-top: var(--space-4);
+  border-top: var(--hairline) solid var(--forest-line);
+  font-size: var(--text-sm);
+  color: var(--on-forest-faint);
+}
+
+.site-footer__staff {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--tap);
+  color: var(--on-forest-soft);
+  font-size: var(--text-sm);
+}
+
+@media (min-width: 720px) {
+  .site-footer__inner {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr);
+  }
+}

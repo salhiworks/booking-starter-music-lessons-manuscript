@@ -1,0 +1,250 @@
+/*
+ * Una Corda Piano Studio — design tokens (Manuscript).
+ * The ONLY file with raw colours, fonts, sizes and spacing (see DESIGN.md).
+ * Every other stylesheet uses these custom properties.
+ *
+ * The idea: a music room in afternoon light, and the manuscript on the stand.
+ * Warm score-paper pages, ebony ink, a parchment band for the quieter sections,
+ * the piano's ebony for the one dark band (how I teach), the booking sheet's
+ * header and the footer — and one brand colour, a deep mahogany by default and
+ * owner-editable, that carries white text: the main buttons, the italic
+ * highlight in headings, selected choices, state edges. The one ornament is
+ * the staff (.staff): five fine lines, never with notes on it. Alegreya for
+ * headings and figures (a book face with a musical rhythm and a beautiful
+ * italic); Alegreya Sans for everything else. Soft paper corners on controls,
+ * round-ended buttons, square photographs.
+ *
+ * Token names are shared with the other Niche Pack starters (so booking.css
+ * reads the same everywhere); the comments say what each one is here.
+ */
+:root {
+  /* ── Colour ─────────────────────────────────────────────── */
+  --paper: #f7f3ec;          /* score paper — the page */
+  --raised: #fffdf9;         /* a fresh sheet — inputs, the booking sheet, lesson rows */
+  --oat: #efe7da;            /* parchment — the quieter bands, the booking summary */
+  --oat-deep: #e2d8c8;       /* frames while loading, skeletons */
+  --sage-100: #f3ede3;       /* quiet highlights */
+  --sage-200: #e8dfd1;       /* tags, done steps */
+  --rule: #d9cfbf;           /* hairlines (decorative) */
+  --line-input: #7a6e64;     /* input and icon-button borders (≥ 3:1 on paper, parchment and white) */
+  --line-soft: #b3a797;      /* borders of choice buttons named by their own text; the staff */
+  --mark: #3f6b4a;           /* the "open" dot (≥ 3:1) */
+  --ink: #221c18;            /* ebony — 15.6:1 on the page */
+  --ink-soft: #3d342e;       /* 11.4:1 */
+  --muted: #64584f;          /* 6.4:1 on the page, 5.8:1 on parchment */
+  --clay: #a3261b;           /* errors only (with an icon or words, never colour alone) */
+  --ply: #c4b8a6;            /* decorative only (rules, the sheet's edge) */
+  --honey-wash: #f0e9dd;
+  --scrim: rgb(34 28 24 / 0.08);
+  --veil: rgb(24 19 16 / 0.6); /* the page behind the booking sheet */
+  --clay-wash: color-mix(in oklab, var(--clay) 6%, var(--raised));
+  --mark-halo: color-mix(in oklab, var(--mark) 22%, transparent);
+
+  /* Ebony: how I teach, the booking sheet's header and the footer (never owner-editable). */
+  --forest: #211915;         /* the piano's ebony */
+  --forest-2: #2b221d;       /* a raised panel */
+  --forest-3: #372c25;       /* a lifted panel, hover */
+  --on-forest: #f5ede1;      /* 15.3:1 on ebony */
+  --on-forest-soft: #d6c9b8; /* 10.9:1 */
+  --on-forest-faint: #a99a88; /* 6.4:1 — small print on ebony only */
+  --forest-line: #3e322a;    /* decorative rules on ebony */
+  --forest-line-strong: #5a4a3f;
+  --light: #ffffff;
+
+  /* Owner-editable (brand.accent) — the brand colour — set on <html> at run time.
+     A DEEP colour that carries white text (the editor checks any new colour at 4.5:1
+     against white): buttons, the italic highlight, selected choices, state edges. */
+  --accent: #8a3a23;
+  --accent-strong: color-mix(in oklab, var(--accent) 86%, #000);
+  --accent-deep: color-mix(in oklab, var(--accent) 66%, #000);
+  --accent-tint: color-mix(in oklab, var(--accent) 16%, var(--raised));
+  --accent-wash: color-mix(in oklab, var(--accent) 7%, var(--raised));
+  --on-accent: #ffffff;      /* white on mahogany, 7.9:1 */
+  --on-accent-soft: #f6e9e2;
+  /* On paper the brand colour reads as text and as a state edge itself. */
+  --accent-text: var(--accent);
+  --accent-edge: var(--accent);
+  --accent-line: var(--accent-deep);
+  --focus: var(--accent);
+  /* The brand colour on ebony: a light rosewood made from it, so highlights and focus read (≥ 4.5:1). */
+  --accent-glow: color-mix(in oklab, var(--accent) 32%, #fff2e6);
+
+  /* The staff — the one ornament: five fine lines, a fixed gap apart. */
+  --staff-gap: 5px;
+  --staff-weight: 1px;
+  --staff-height: calc(var(--staff-gap) * 4 + var(--staff-weight));
+  --staff: repeating-linear-gradient(180deg, var(--line-soft) 0 var(--staff-weight), transparent var(--staff-weight) var(--staff-gap));
+  --staff-on-dark: repeating-linear-gradient(180deg, var(--forest-line-strong) 0 var(--staff-weight), transparent var(--staff-weight) var(--staff-gap));
+  /* Kept for the shared booking styles: the foot of the sheet's header. */
+  --ticks-on-dark: var(--staff-on-dark);
+  --tick-tall: var(--staff-height);
+  --marker-bar: 0.375rem;
+
+  /* ── Type ───────────────────────────────────────────────── */
+  --font-display: 'Alegreya', 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --font-text: 'Alegreya Sans', 'Gill Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  --font-sans-display: 'Alegreya Sans', 'Gill Sans', 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  /* No monospace: small labels use Alegreya Sans capitals with tabular figures. */
+  --font-mono: var(--font-text);
+
+  --text-micro: 0.8125rem;
+  --text-xs: 0.875rem;
+  --text-sm: 1rem;
+  --text-md: clamp(1.0625rem, 1.02rem + 0.15vw, 1.125rem);
+  --text-lg: clamp(1.1875rem, 1.1rem + 0.35vw, 1.375rem);
+  --text-xl: clamp(1.375rem, 1.2rem + 0.7vw, 1.875rem);
+  --text-2xl: clamp(2.125rem, 1.55rem + 2.3vw, 3.5rem);
+  --text-3xl: clamp(2.5rem, 1.5rem + 4vw, 5rem);
+  --text-hero: clamp(2.625rem, 1.6rem + 3.4vw, 4.625rem);
+  --text-statement: clamp(1.625rem, 1.2rem + 1.6vw, 2.625rem);
+  --text-numeral: clamp(2.25rem, 1.8rem + 1.8vw, 3.25rem);
+  --text-code: clamp(1.875rem, 1.6rem + 1.2vw, 2.375rem);
+  --text-step: clamp(1.5rem, 1.32rem + 0.6vw, 1.875rem);  /* a booking step's heading */
+  --text-sheet: clamp(1.1875rem, 1.1rem + 0.3vw, 1.375rem); /* the booking sheet's title */
+  --text-service: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+  --text-price: clamp(1.25rem, 1.12rem + 0.45vw, 1.5rem);
+  --text-fact: clamp(1.125rem, 1.04rem + 0.3vw, 1.3125rem);
+  --text-wordmark: clamp(1.5rem, 1.38rem + 0.45vw, 1.8125rem);
+  --text-footer-name: clamp(3rem, 1.6rem + 5vw, 6rem);
+  --text-card: clamp(1.1875rem, 1.1rem + 0.3vw, 1.375rem);
+  --text-finger: clamp(2.25rem, 1.8rem + 1.4vw, 3.25rem); /* the finger numbers 1–5 */
+
+  --leading-display: 1.02;
+  --leading-heading: 1.08;
+  --leading-body: 1.6;
+  --leading-tight: 1.28;
+
+  --tracking-display: -0.005em;
+  --tracking-eyebrow: 0.12em;
+  --tracking-button: 0.01em;
+  --tracking-code: 0.42em;
+  --tracking-tag: 0.08em;
+  --tracking-wordmark: -0.005em;
+  --tracking-mono: 0.02em;
+
+  --weight-text: 400;
+  --weight-strong: 700;
+  --weight-medium: 500;
+  --weight-display: 500;   /* Alegreya Medium */
+  --weight-sans-display: 500;
+
+  /* No width axis; kept for the shared booking styles. */
+  --stretch-display: 100%;
+  --stretch-label: 100%;
+  --stretch-text: 100%;
+
+  /* Heading style (brand.headings): serif (default) | sans */
+  --heading-font: var(--font-display);
+  --heading-weight: var(--weight-display);
+  --heading-stretch: var(--stretch-display);
+  --heading-tracking: var(--tracking-display);
+  --heading-light-weight: var(--weight-display);
+
+  --measure: 62ch;
+  --measure-lede: 44ch;
+  --measure-title: 18ch;
+
+  /* ── Space ──────────────────────────────────────────────── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4rem;
+  --space-9: 6rem;
+  --space-10: 8.5rem;
+
+  --gutter: clamp(1rem, 4.5vw, 4.5rem);
+  --section-pad: clamp(4.5rem, 2.4rem + 6.4vw, 8.5rem);
+  --desk-pad: clamp(var(--space-5), 4vw, var(--space-8));
+  --page-max: 78rem;
+  --header-height: 4.5rem;
+  --sheet-width: 60rem;      /* the booking sheet from 960 px */
+
+  /* ── Sizes ──────────────────────────────────────────────── */
+  --tap: 2.75rem;            /* 44 px — the smallest tap target */
+  --control: 3.25rem;        /* 52 px — buttons */
+  --input: 3rem;             /* 48 px — inputs in the booking sheet */
+  --chip: 2.75rem;           /* 44 px — time chips (the smallest tap target) */
+  --day-cell: 2.75rem;       /* 44 px — month grid cells */
+  --day-card-w: 4rem;        /* 64 px — phone day rail */
+  --day-card-h: 5.25rem;     /* 84 px */
+  --dot: 0.3125rem;          /* 5 px — the "open" mark */
+  --drop: 0.75rem;           /* 12 px */
+  --edge: 3px;               /* the brand-colour edge under the booking sheet's header */
+  --hairline: 1px;
+  --rule-strong: 2px;
+  --focus-width: 2px;
+  --focus-offset: 3px;
+  --logo-height: 1.875rem;
+  --logo-max: 11rem;
+  --summary-width: 17rem;
+  --time-min: 6rem;          /* a time chip's narrowest width */
+  --label-col: 7rem;
+  --form-max: 34rem;
+  --code-width: 15rem;
+  --code-height: 4rem;
+  --sticky-offset: 6rem;     /* room above a step heading for the phone summary strip */
+  --kind-aside: 15rem;       /* a kind's title column in the menu */
+  --figure-w: 7.5rem;        /* a lesson row's length / price column */
+  --service-thumb: 4rem;     /* an owner's lesson photo in the menu */
+  --hero-photo-max: calc(100svh - var(--header-height) - var(--space-8)); /* the first screen's photo, desktop */
+  --status-dot: 0.5rem;
+  --skeleton-block: 20rem;
+  --skeleton-times: 9rem;
+
+  /* ── Shape ──────────────────────────────────────────────── */
+  /* Paper: soft corners on controls, round-ended buttons, square photographs. */
+  --radius-0: 0;
+  --radius-1: 4px;           /* inputs, chips, small controls */
+  --radius-2: 6px;           /* the booking sheet, cards */
+  --radius-photo: 0;         /* photographs: square */
+  --radius-button: 999px;    /* buttons: round ends, like a pencil's */
+  --radius-nail: 50%;        /* round marks (kept name: shared booking styles) */
+  --radius-pill: 999px;
+  --shadow-soft: 0 -0.5rem 1.5rem var(--scrim);
+  --shadow-top: 0 0.5rem 1.5rem var(--scrim);
+  --shadow-print: 0 1.25rem 2.5rem -1.25rem rgb(34 24 18 / 0.32);
+  --shadow-sheet: -1.5rem 0 4rem rgb(34 24 18 / 0.26);
+
+  /* ── Motion ─────────────────────────────────────────────── */
+  --dur-quick: 160ms;
+  --dur-step: 280ms;
+  --dur-enter: 700ms;
+  --dur-photo: 1100ms;
+  --dur-sheet: 420ms;
+  --stagger: 80ms;
+  --dur-shimmer: 1600ms;
+  --dur-spin: 900ms;
+  --ease-settle: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-soft: cubic-bezier(0.65, 0, 0.35, 1);
+  --rise: 0.75rem;
+  --settle-scale: 1.03;
+
+  /* ── Layers ─────────────────────────────────────────────── */
+  --layer-sticky: 5;
+  --layer-banner: 10;
+  --layer-header: 8;
+}
+
+:root[data-headings='sans'] {
+  --heading-font: var(--font-sans-display);
+  --heading-weight: var(--weight-sans-display);
+  --heading-light-weight: var(--weight-sans-display);
+  --heading-tracking: -0.015em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-quick: 1ms;
+    --dur-step: 1ms;
+    --dur-enter: 1ms;
+    --dur-photo: 1ms;
+    --dur-sheet: 1ms;
+    --stagger: 0ms;
+    --rise: 0px;
+    --settle-scale: 1;
+  }
+}
