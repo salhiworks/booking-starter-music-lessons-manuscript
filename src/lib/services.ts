@@ -5,7 +5,7 @@ import type { Service } from '@profitstudio/booking-engine';
  * The studio's lesson list: its kinds, honest price and length terms, the first
  * lesson, and who each lesson suits.
  *
- * The engine (2.0.0-beta.4) has no service categories and no per-service
+ * The engine (2.0.0) has no service categories and no per-service
  * metadata, and a service's id is a database UUID this site cannot know when it
  * is built — so everything here is read from the service's own engine data:
  *

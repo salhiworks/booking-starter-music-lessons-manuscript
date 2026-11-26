@@ -5,7 +5,7 @@ Piano Studio** (a fictional one-teacher piano studio in Kerrytown, Ann Arbor: a 
 lesson, beginner, private and extended piano lessons, music theory & reading and repertoire
 coaching, for complete beginners, adults returning to the piano and students from age 9) for
 the owner to make their own. Its identity lives in `src/site.config.ts`; `CUSTOMIZE.md` is the
-prompt that personalizes it. Built around **@profitstudio/booking-engine** **2.0.0-beta.4**
+prompt that personalizes it. Built around **@profitstudio/booking-engine** **2.0.0**
 (pinned; lock in `booking-engine.lock.json`). The engine owns booking; this project owns the
 public design.
 
