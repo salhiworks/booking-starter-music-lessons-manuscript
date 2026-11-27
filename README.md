@@ -28,7 +28,7 @@ The one ornament is the **staff**: five fine lines, nothing ever written on them
 over Alegreya Sans.
 
 Booking runs on [`@profitstudio/booking-engine`](https://www.npmjs.com/package/@profitstudio/booking-engine)
-**2.0.0** (pinned) with your own Supabase project and Resend for email.
+**2.0.1** (pinned) with your own Supabase project and Resend for email.
 
 ## 1. Try it (no accounts needed)
 

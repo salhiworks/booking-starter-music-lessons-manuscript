@@ -35,7 +35,7 @@ students).**
 
 | Package | Licence | Notes |
 |---|---|---|
-| `@profitstudio/booking-engine` 2.0.0 | MIT | The booking engine and the packaged dashboard |
+| `@profitstudio/booking-engine` 2.0.1 | MIT | The booking engine and the packaged dashboard |
 | `react`, `react-dom` | MIT | |
 | `@fontsource/alegreya` | OFL-1.1 | Typeface (Alegreya — Juan Pablo del Peral, Huerta Tipográfica) |
 | `@fontsource/alegreya-sans` | OFL-1.1 | Typeface (Alegreya Sans — Juan Pablo del Peral, Huerta Tipográfica) |
